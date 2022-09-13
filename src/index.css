@@ -165,7 +165,6 @@ input[type="number"]:focus {
 
 .left label {
   color: var(--clr-very-dark-cyan);
-  margin-bottom: 0.5em;
 }
 
 input[type="number"]:invalid {
@@ -228,9 +227,11 @@ input[type="number"]:placeholder-shown {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 0.5em;
 }
 
 .error {
+  text-align: right;
   color: var(--clr-error);
   opacity: 0;
 }
