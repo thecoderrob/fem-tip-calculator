@@ -12,38 +12,19 @@ const CalculatorComponent = () => {
   const [totalPerPerson, setTotalPerPerson] = useState(0);
 
   const handleInputChange = (e) => {
-    const id = e.target.id;
-    const input = e.target.value;
-    const isInputValid = e.target.validationMessage === "";
+    const element = e.target;
+    const id = element.id;
+    const input = element.value;
+    const isInputValid = element.validationMessage === "";
 
     // Show error message
-    if (!isInputValid) {
-      console.log(e.target);
-      const isBadInput = e.target.validity.badInput;
-      const isAboveMax = e.target.validity.rangeOverflow;
-      const isBelowMin = e.target.validity.rangeUnderflow;
-      const isWrongDecimal = e.target.validity.stepMismatch;
-      const stepCount = parseInt(e.target.step.length) - 1;
-
-      const errorMessage = isBadInput
-        ? "Please enter a number"
-        : isAboveMax
-        ? `Number cannot be greater than ${e.target.max}`
-        : isBelowMin
-        ? `Number cannot be less than ${e.target.min}`
-        : isWrongDecimal
-        ? `Number cannot have more than ${stepCount} decimals`
-        : "";
-      const errorEl = document.getElementById(`${id}-error`);
-      errorEl.classList.add("show");
-      errorEl.innerText = errorMessage;
-
+    if (!isInputValid || isEmptyOrZero(input)) {
+      showErrorMessage(element, id);
       return "";
     }
-    if (isEmptyOrZero(input)) return 0;
 
     // Hide error message (if valid)
-    document.getElementById(`${id}-error`).classList.remove("show");
+    hideErrorMessage(id);
 
     return parseFloat(input);
   };
@@ -114,6 +95,32 @@ const CalculatorComponent = () => {
     };
     computeTipAmountAndTotal();
   }, [bill, people, tipPercent]);
+
+  const showErrorMessage = (element, id) => {
+    const isBadInput = element.validity.badInput;
+    const isAboveMax = element.validity.rangeOverflow;
+    const isBelowMin = element.validity.rangeUnderflow;
+    const isWrongDecimal = element.validity.stepMismatch;
+    const stepCount = parseInt(element.step.length) - 1;
+
+    const errorMessage = isBadInput
+      ? "Please enter a number"
+      : isAboveMax
+      ? `Number cannot be greater than ${element.max}`
+      : isBelowMin
+      ? `Number cannot be less than ${element.min}`
+      : isWrongDecimal
+      ? `Number cannot have more than ${stepCount} decimals`
+      : "";
+    const errorEl = document.getElementById(`${id}-error`);
+    errorEl.classList.add("show");
+    errorEl.innerText = errorMessage;
+  };
+
+  const hideErrorMessage = (id) => {
+    console.log("meme");
+    document.getElementById(`${id}-error`).classList.remove("show");
+  };
 
   const isEmptyOrZero = (value) => {
     if (value === "" || value < 1) return true;

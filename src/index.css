@@ -147,6 +147,7 @@ input[type="number"] {
   -moz-appearance: textfield;
 
   border: none;
+  border-radius: 0.2em;
   background-color: var(--clr-light-gray);
   padding: 0.25em;
 
