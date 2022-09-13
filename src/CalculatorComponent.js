@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 
 const CalculatorComponent = () => {
+  const inputBillRef = useRef(null);
+  const inputPeopleRef = useRef(null);
   const inputTipPercentRef = useRef(null);
 
   const [bill, setBill] = useState("");
@@ -10,11 +12,38 @@ const CalculatorComponent = () => {
   const [totalPerPerson, setTotalPerPerson] = useState(0);
 
   const handleInputChange = (e) => {
+    const id = e.target.id;
     const input = e.target.value;
     const isInputValid = e.target.validationMessage === "";
 
-    if (!isInputValid) return 0;
+    // Show error message
+    if (!isInputValid) {
+      console.log(e.target);
+      const isBadInput = e.target.validity.badInput;
+      const isAboveMax = e.target.validity.rangeOverflow;
+      const isBelowMin = e.target.validity.rangeUnderflow;
+      const isWrongDecimal = e.target.validity.stepMismatch;
+      const stepCount = parseInt(e.target.step.length) - 1;
+
+      const errorMessage = isBadInput
+        ? "Please enter a number"
+        : isAboveMax
+        ? `Number cannot be greater than ${e.target.max}`
+        : isBelowMin
+        ? `Number cannot be less than ${e.target.min}`
+        : isWrongDecimal
+        ? `Number cannot have more than ${stepCount} decimals`
+        : "";
+      const errorEl = document.getElementById(`${id}-error`);
+      errorEl.classList.add("show");
+      errorEl.innerText = errorMessage;
+
+      return "";
+    }
     if (isEmptyOrZero(input)) return 0;
+
+    // Hide error message (if valid)
+    document.getElementById(`${id}-error`).classList.remove("show");
 
     return parseFloat(input);
   };
@@ -49,10 +78,18 @@ const CalculatorComponent = () => {
     setTipPercent("");
     setTipAmountPerPerson(0);
     setTotalPerPerson(0);
+
+    inputBillRef.current.value = "";
+    inputPeopleRef.current.value = "";
+    inputTipPercentRef.current.value = "";
     document.querySelectorAll(".btn").forEach((btn) => {
       if (btn.classList.contains("active")) {
         btn.classList.remove("active");
       }
+    });
+
+    document.querySelectorAll(".error").forEach((item) => {
+      item.classList.remove("show");
     });
   };
 
@@ -92,7 +129,10 @@ const CalculatorComponent = () => {
           <div className="left">
             <div className="left-wrapper">
               <div className="bill-container">
-                <label htmlFor="bill">Bill</label>
+                <div className="label-container">
+                  <label htmlFor="bill">Bill</label>
+                  <span id="bill-error" className="error"></span>
+                </div>
                 <div className="input-container">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -109,16 +149,19 @@ const CalculatorComponent = () => {
                     placeholder=""
                     min={0}
                     max={99999}
-                    step=".0001"
+                    step=".01"
                     id="bill"
-                    value={bill}
+                    ref={inputBillRef}
                     onChange={(e) => setBill(handleInputChange(e))}
                   />
                 </div>
               </div>
 
               <div className="tip-percent-container">
-                <label>Select Tip %</label>
+                <div className="label-container">
+                  <label>Select Tip %</label>
+                  <span id="tip-percent-error" className="error"></span>
+                </div>
                 <div className="tip-percent-grid">
                   <button
                     className="btn"
@@ -153,8 +196,10 @@ const CalculatorComponent = () => {
                   <input
                     type="number"
                     placeholder="Custom"
+                    id="tip-percent"
                     min={0}
                     max={500}
+                    step=".01"
                     ref={inputTipPercentRef}
                     onChange={(e) => handleTipPercentInput(e)}
                   />
@@ -162,7 +207,10 @@ const CalculatorComponent = () => {
               </div>
 
               <div className="people-container">
-                <label htmlFor="people">Number of People</label>
+                <div className="label-container">
+                  <label htmlFor="people">Number of People</label>
+                  <span id="people-error" className="error"></span>
+                </div>
                 <div className="input-container">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -180,6 +228,7 @@ const CalculatorComponent = () => {
                     min={1}
                     max={999}
                     id="people"
+                    ref={inputPeopleRef}
                     onChange={(e) => setPeople(handleInputChange(e))}
                   />
                 </div>

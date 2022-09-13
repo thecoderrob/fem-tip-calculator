@@ -6,10 +6,12 @@
   --clr-grayish-cyan: hsl(184, 14%, 56%);
   --clr-light-grayish-cyan: #9de9df;
   --clr-very-light-grayish-cyan: hsl(185, 41%, 84%);
-  --clr-white: hsl(0, 0%, 100%);
-  --clr-h1: #3a5d5f;
 
+  --clr-white: hsl(0, 0%, 100%);
   --clr-light-gray: #f3f8fb;
+
+  --clr-error: rgb(226, 16, 16);
+  --clr-h1: #3a5d5f;
 
   --ff-primary: "Space Mono", monospace;
 
@@ -129,7 +131,8 @@ label {
   display: block;
 }
 
-label {
+label,
+.error {
   font-size: var(--fs-label);
   font-weight: var(--fw-bold);
 }
@@ -165,7 +168,7 @@ input[type="number"]:focus {
 }
 
 input[type="number"]:invalid {
-  border: 2px solid red;
+  border: 2px solid var(--clr-error);
 }
 
 input[type="number"]:valid {
@@ -217,6 +220,21 @@ input[type="number"]:placeholder-shown {
   background-color: var(--clr-light-grayish-cyan);
   color: var(--clr-very-dark-cyan);
   cursor: pointer;
+}
+
+/* Error */
+.label-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error {
+  color: var(--clr-error);
+  opacity: 0;
+}
+.show {
+  opacity: 1;
 }
 
 @media (min-width: 760px) {
