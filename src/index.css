@@ -239,14 +239,14 @@ input[type="number"]:placeholder-shown {
   opacity: 1;
 }
 
-@media (min-width: 760px) {
+@media (min-width: 800px) {
   main {
     height: 100vh;
   }
 
   .calculator-grid {
     grid-template-columns: 1fr 1fr;
-    width: 850px;
+    width: 800px;
   }
 
   .wrapper {
